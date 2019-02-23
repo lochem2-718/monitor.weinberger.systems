@@ -1,8 +1,59 @@
-
 // C# code
 // using System;
 // using System.Linq;
 // using System.Collections.Generic;
+import { CPU, Core } from './models';
+import * as fs from 'fs';
+import { promisify } from 'util';
+
+
+function convertMHztoGHz( mhz : number ) : number {
+    return mhz / Math.pow(10, 3);
+}
+
+export async function Parse( cpuInfoFilePath : string = '/proc/cpuinfo' ) : CPU {
+    const readFile = promisify( fs.readFile );
+    let file = await readFile( cpuInfoFilePath, { encoding: 'utf8' } );
+    let coreStringArrays : string[][] = 
+        file
+            .split( '\n\n' )
+            .map( ( core : string ) => core.split( '\n' ) );
+    
+    let coreDicts : Map<string,string>[] =
+        coreStringArrays
+            .map( ( coreStringArray : string[] ) => {
+                let coreDict : Map<string, string> = new Map();
+                for( let line in coreStringArray ) {
+                    let pair : string[] = line.split( ' : ' );
+                    let key = pair[0].replace( ' ', '' );
+                    let value = pair[1];
+                    coreDict.set( key, value );
+                }
+                return coreDict;
+            } )
+    
+    let cpu = new CPU();
+
+    let modelname = coreDicts[0].get( 'modelname' );
+    if( modelname !== undefined ) {
+        cpu.name = modelname;
+    }
+    cpu.cores =
+        coreDicts
+            .map( ( coreDict : Map<string, string> ) => {
+                let mhz = coreDict.get( 'cpuMHz' );
+                if( mhz !== undefined ) {
+                    return new Core( convertMHztoGHz( parseFloat( mhz ) ) )
+                }
+            } )
+            .filter( ( core ) => { return core !== undefined } );
+
+
+    // still unfinished
+    
+    
+        
+}
 
 // namespace performance_reader
 // {
@@ -11,33 +62,6 @@
 //         public static CPU Parse( string cpuinfoFilePath )
 //         {
 //             // get fields: model name, cpu MHz
-//             string file = FileReader.Read(cpuinfoFilePath);
-//             string[][] coreStringArrays = 
-//                 file
-//                     .Split("\n\n")
-//                     .Select<string, string[]>( core => core.Split('\n') )
-//                     .ToArray();
-
-//             Dictionary<string, string>[] coreDicts =
-//                 coreStringArrays
-//                     .Select<string[], Dictionary<string, string>>(coreStringArray => {
-//                         Dictionary<string, string> coreDict = new Dictionary<string, string>();
-//                         foreach( string line in coreStringArray)
-//                         {
-//                             string[] pair = line.Split(" : ");
-//                             pair[0] = pair[0].Replace(" ", "");
-//                             try
-//                             {
-//                                 coreDict.Add(pair[0], pair[1]);
-//                             }
-//                             catch (Exception e)
-//                             {
-//                                 Console.WriteLine(e.Message);
-//                             }
-//                         }
-//                         return coreDict;
-//                     })
-//                     .ToArray();
 //             CPU cpu = new CPU();
 //             cpu.Name = coreDicts[0]["modelname"];
 //             cpu.Cores = 
@@ -58,9 +82,5 @@
 //             return cpu;
 //         }
 
-//         private static float MegahertzToGigahertz( float megaherz )
-//         {
-//             return megaherz * (float) Math.Pow(10, 3);
-//         }
 //     }
 // }

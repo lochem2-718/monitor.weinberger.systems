@@ -1,24 +1,41 @@
 import express, { Request, Response, Application } from 'express';
 import nunjucks from 'nunjucks';
+import { ResolveOptions } from 'dns';
 
-const app : Application = express();
+const server : Application = express();
 
 nunjucks.configure('views', {
     autoescape: true,
-    express: app
+    express: server
 })
 
 // same syntax as jinja
-app.set('view engine', 'nunjucks');
+server.set('view engine', 'nunjucks');
 
 
 
-app.get('/', indexHandler);
+server.get('/', handleIndex);
 
 
 
-function indexHandler( req : Request, res : Response ) : void {
+function handleIndex( req : Request, res : Response ) : void {
     res.send('This is the very bare bones');
 }
 
-app.listen(3000);
+// will check user login
+async function handleLoginAttempt( req : Request, res : Response ) {
+    
+}
+
+
+// handles loading the system info page
+function handleSystemInfoPage( req : Request, res : Response ) {
+
+}
+
+// handles the api calls to system info
+async function handleSystemInfoApi( req : Request, res : Response ) {
+
+}
+
+server.listen(3000);
