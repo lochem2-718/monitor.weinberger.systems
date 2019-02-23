@@ -1,0 +1,30 @@
+{
+  "name": "monitor.weinberger.systems",
+  "version": "1.0.0",
+  "description": "A web application for monitoring Ubuntu system information.",
+  "main": "./build/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lochem2-718/monitor.weinberger.systems.git"
+  },
+  "author": "Jared Weinberger, Paul Gellai",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lochem2-718/monitor.weinberger.systems/issues"
+  },
+  "homepage": "https://github.com/lochem2-718/monitor.weinberger.systems#readme",
+  "devDependencies": {
+    "@types/express": "^4.16.1",
+    "@types/nunjucks": "^3.1.1",
+    "typescript": "^3.3.3333"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "file-system": "^2.2.2",
+    "nunjucks": "^3.1.7"
+  }
+}
