@@ -1,5 +1,7 @@
 // C# code
-import * as file from 'file-system';
+import { RAM } from './models';
+import * as fs from 'fs';
+import { promisify } from 'util';
 // using System;
 // using System.IO;
 // using System.Text;

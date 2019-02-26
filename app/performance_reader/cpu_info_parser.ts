@@ -11,7 +11,7 @@ function convertMHztoGHz( mhz : number ) : number {
     return mhz / Math.pow(10, 3);
 }
 
-export async function Parse( cpuInfoFilePath : string = '/proc/cpuinfo' ) : CPU {
+export async function Parse( cpuInfoFilePath : string = '/proc/cpuinfo' ) : Promise<CPU> {
     const readFile = promisify( fs.readFile );
     let file = await readFile( cpuInfoFilePath, { encoding: 'utf8' } );
     let coreStringArrays : string[][] = 
@@ -45,42 +45,12 @@ export async function Parse( cpuInfoFilePath : string = '/proc/cpuinfo' ) : CPU 
                 if( mhz !== undefined ) {
                     return new Core( convertMHztoGHz( parseFloat( mhz ) ) )
                 }
+                else {
+                    return undefined;
+                }
             } )
-            .filter( ( core ) => { return core !== undefined } );
-
-
-    // still unfinished
+            .filter( ( core ) => { return core !== undefined } ) as Core[];
     
-    
-        
+    return cpu;    
 }
 
-// namespace performance_reader
-// {
-//     public static class CPUInfoParser
-//     {
-//         public static CPU Parse( string cpuinfoFilePath )
-//         {
-//             // get fields: model name, cpu MHz
-//             CPU cpu = new CPU();
-//             cpu.Name = coreDicts[0]["modelname"];
-//             cpu.Cores = 
-//                 coreDicts
-//                     .Select<Dictionary<string, string>, CPU.Core>(coreDict => 
-//                             new CPU.Core { ClockSpeed = MegahertzToGigahertz(float.Parse(coreDict["cpuMHz"])) }
-//                     )
-//                     .ToArray();
-
-//             float sumOfClockSpeeds = 0F;
-//             foreach (CPU.Core core in cpu.Cores)
-//             {
-//                 sumOfClockSpeeds += core.ClockSpeed;
-//             }
-
-//             cpu.ClockSpeed = sumOfClockSpeeds / cpu.Cores.Length;
-
-//             return cpu;
-//         }
-
-//     }
-// }
