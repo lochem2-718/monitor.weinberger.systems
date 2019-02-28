@@ -22,9 +22,7 @@ server.get('/', handleIndex);
 
 
 function handleIndex( req : Request, res : Response ) : void {
-    //res.send('This is the very bare bones');
-    let oof = "oof";
-    res.render("index.html", oof);
+    res.send('This is the very bare bones');
 }
 
 // will check user login
