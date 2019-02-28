@@ -1,4 +1,3 @@
-//C# code
 export class RAM {
     totalMemory : number;
     usedMemory : number;
