@@ -34,48 +34,65 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var nunjucks_1 = __importDefault(require("nunjucks"));
-var express_1 = __importDefault(require("express"));
-var server = express_1.default();
-server.use(express_1.default.static("static"));
-nunjucks_1.default.configure('views', {
-    autoescape: true,
-    express: server
-});
-// same syntax as jinja
-server.set('view engine', 'nunjucks');
-server.get('/', handleIndex);
-server.get("/login", login);
-server.post("/login", handleLoginAttempt);
-function login(req, res) {
-    res.render("login.html");
+var models_1 = require("./models");
+var fs = __importStar(require("fs"));
+var util_1 = require("util");
+function convertMHztoGHz(mhz) {
+    return mhz / Math.pow(10, 3);
 }
-function handleIndex(req, res) {
-    //res.send('This is the very bare bones');
-    var oof = "oof";
-    res.render("index.html", { oof: oof });
-}
-// will check user login
-function handleLoginAttempt(req, res) {
+function Parse(cpuInfoFilePath) {
+    if (cpuInfoFilePath === void 0) { cpuInfoFilePath = '/proc/cpuinfo'; }
     return __awaiter(this, void 0, void 0, function () {
+        var readFile, file, coreStringArrays, coreDicts, cpu, modelname;
         return __generator(this, function (_a) {
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0:
+                    readFile = util_1.promisify(fs.readFile);
+                    return [4 /*yield*/, readFile(cpuInfoFilePath, { encoding: 'utf8' })];
+                case 1:
+                    file = _a.sent();
+                    coreStringArrays = file
+                        .split('\n\n')
+                        .map(function (core) { return core.split('\n'); });
+                    coreDicts = coreStringArrays
+                        .map(function (coreStringArray) {
+                        var coreDict = new Map();
+                        for (var line in coreStringArray) {
+                            var pair = line.split(' : ');
+                            var key = pair[0].replace(' ', '');
+                            var value = pair[1];
+                            coreDict.set(key, value);
+                        }
+                        return coreDict;
+                    });
+                    cpu = new models_1.CPU();
+                    modelname = coreDicts[0].get('modelname');
+                    if (modelname !== undefined) {
+                        cpu.name = modelname;
+                    }
+                    cpu.cores =
+                        coreDicts
+                            .map(function (coreDict) {
+                            var mhz = coreDict.get('cpuMHz');
+                            if (mhz !== undefined) {
+                                return new models_1.Core(convertMHztoGHz(parseFloat(mhz)));
+                            }
+                            else {
+                                return undefined;
+                            }
+                        })
+                            .filter(function (core) { return core !== undefined; });
+                    return [2 /*return*/, cpu];
+            }
         });
     });
 }
-// handles loading the system info page
-function handleSystemInfoPage(req, res) {
-}
-// handles the api calls to system info
-function handleSystemInfoApi(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            return [2 /*return*/];
-        });
-    });
-}
-server.listen(3000);
+exports.Parse = Parse;

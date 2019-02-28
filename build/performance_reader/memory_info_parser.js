@@ -34,48 +34,58 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var nunjucks_1 = __importDefault(require("nunjucks"));
-var express_1 = __importDefault(require("express"));
-var server = express_1.default();
-server.use(express_1.default.static("static"));
-nunjucks_1.default.configure('views', {
-    autoescape: true,
-    express: server
-});
-// same syntax as jinja
-server.set('view engine', 'nunjucks');
-server.get('/', handleIndex);
-server.get("/login", login);
-server.post("/login", handleLoginAttempt);
-function login(req, res) {
-    res.render("login.html");
+// C# code
+var models_1 = require("./models");
+var fs = __importStar(require("fs"));
+var util_1 = require("util");
+function KilobytesToGigabytes(kilobytes) {
+    return kilobytes / Math.pow(10, 6);
 }
-function handleIndex(req, res) {
-    //res.send('This is the very bare bones');
-    var oof = "oof";
-    res.render("index.html", { oof: oof });
-}
-// will check user login
-function handleLoginAttempt(req, res) {
+function Parse(ramInfoFilePath) {
+    if (ramInfoFilePath === void 0) { ramInfoFilePath = '/proc/meminfo'; }
     return __awaiter(this, void 0, void 0, function () {
+        var readFile, file, memDict, memInfo, totalMemory, usedMemory, totalMemoryOnDisk, usedMemoryOnDisk;
         return __generator(this, function (_a) {
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0:
+                    readFile = util_1.promisify(fs.readFile);
+                    return [4 /*yield*/, readFile(ramInfoFilePath, { encoding: 'utf8' })];
+                case 1:
+                    file = _a.sent();
+                    memDict = new Map();
+                    file
+                        .split("\n")
+                        .forEach(function (str) {
+                        var pair = str
+                            .replace(" ", "")
+                            .replace("kB", "")
+                            .split(":");
+                        memDict.set(pair[0], KilobytesToGigabytes(parseFloat(pair[1])));
+                    });
+                    memInfo = new models_1.RAM();
+                    totalMemory = memDict.get("MemTotal");
+                    if (totalMemory !== undefined)
+                        memInfo.totalMemory = totalMemory;
+                    usedMemory = memDict.get("MemFree");
+                    if (usedMemory !== undefined)
+                        memInfo.usedMemory = usedMemory;
+                    totalMemoryOnDisk = memDict.get("SwapTotal");
+                    if (totalMemoryOnDisk !== undefined)
+                        memInfo.totalMemoryOnDisk = totalMemoryOnDisk;
+                    usedMemoryOnDisk = memDict.get("SwapFree");
+                    if (usedMemoryOnDisk !== undefined)
+                        memInfo.usedMemoryOnDisk = usedMemoryOnDisk;
+                    return [2 /*return*/, memInfo];
+            }
         });
     });
 }
-// handles loading the system info page
-function handleSystemInfoPage(req, res) {
-}
-// handles the api calls to system info
-function handleSystemInfoApi(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            return [2 /*return*/];
-        });
-    });
-}
-server.listen(3000);
+exports.Parse = Parse;
