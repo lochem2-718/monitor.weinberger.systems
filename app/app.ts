@@ -2,6 +2,9 @@ import express, { Request, Response, Application } from 'express';
 import nunjucks from 'nunjucks';
 import { ResolveOptions } from 'dns';
 
+import * as CPUInfoParser from "./performance_reader/cpu_info_parser";
+import * as RAMInfoParser from "./performance_reader/memory_info_parser";
+
 const server : Application = express();
 
 nunjucks.configure('views', {
@@ -19,7 +22,9 @@ server.get('/', handleIndex);
 
 
 function handleIndex( req : Request, res : Response ) : void {
-    res.send('This is the very bare bones');
+    //res.send('This is the very bare bones');
+    let oof = "oof";
+    res.render("index.html", oof);
 }
 
 // will check user login
