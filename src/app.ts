@@ -1,13 +1,11 @@
 import nunjucks from 'nunjucks';
-import { ResolveOptions } from 'dns';
 import express, { Request, Response, Application } from 'express';
 import * as CPUInfoParser from "./performance_reader/cpu_info_parser";
 import * as RAMInfoParser from "./performance_reader/memory_info_parser";
-import { Server } from 'http';
 
 
 const server : Application = express();
-server.use(express.static("static"));
+server.use(express.static("./dist/public"));
 
 nunjucks.configure('views', {
     autoescape: true,
@@ -50,6 +48,6 @@ async function handleSystemInfoApi( req : Request, res : Response ) {
 
 }
 
-console.log('The server is running.\nPress Ctrl+C to stop...');
+console.log('The server is running on http://localhost:3000/\n\nPress Ctrl+C to stop...');
 
 server.listen(3000);
