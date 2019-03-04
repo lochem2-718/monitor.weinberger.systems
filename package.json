@@ -4,11 +4,9 @@
   "description": "A web application for monitoring Ubuntu system information.",
   "main": "./dist/app.js",
   "scripts": {
-    "start":"npm run app",
+    "start": "npm run app",
     "app": "node dist/app.js",
-    "build": "npm run build-typescript && npm run build-sass",
-    "build-typescript":"tsc",
-    "build-sass": "node-sass ./src/public/stylesheets/main.sass ./dist/public/stylesheets/main.css"
+    "build": "gulp"
   },
   "repository": {
     "type": "git",
@@ -23,6 +21,11 @@
   "devDependencies": {
     "@types/express": "^4.16.1",
     "@types/nunjucks": "^3.1.1",
+    "gulp": "^4.0.0",
+    "gulp-clean-css": "^4.0.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-terser": "^1.1.7",
+    "gulp-typescript": "^5.0.0",
     "node-sass": "^4.11.0",
     "nodemon": "^1.18.10",
     "typescript": "^3.3.3333"
