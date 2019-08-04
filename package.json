@@ -1,43 +1,63 @@
 {
-  "name": "monitor.weinberger.systems",
-  "version": "1.0.0",
-  "description": "A web application for monitoring Ubuntu system information.",
-  "main": "./dist/app.js",
-  "scripts": {
-    "start": "npm run app",
-    "app": "node dist/app.js",
-    "build": "gulp"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lochem2-718/monitor.weinberger.systems.git"
-  },
-  "author": "Jared Weinberger, Paul Gellai",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/lochem2-718/monitor.weinberger.systems/issues"
-  },
-  "homepage": "https://github.com/lochem2-718/monitor.weinberger.systems#readme",
-  "devDependencies": {
-    "@types/express": "^4.16.1",
-    "@types/nunjucks": "^3.1.1",
-    "elm": "^0.19.0",
-    "gulp": "^4.0.0",
-    "gulp-clean-css": "^4.0.0",
-    "gulp-elm": "^0.8.1",
-    "gulp-sass": "^4.0.2",
-    "gulp-terser": "^1.1.7",
-    "gulp-typescript": "^5.0.0",
-    "node-sass": "^4.12.0",
-    "nodemon": "^1.18.10",
-    "typescript": "^3.3.3333"
-  },
-  "dependencies": {
-    "express": "^4.16.4",
-    "file-system": "^2.2.2",
-    "nunjucks": "^3.1.7",
-    "systeminformation": "^4.1.6",
-    "ts": "^0.2.2",
-    "util": "^0.11.1"
-  }
+   "name": "monitor.weinberger.systems",
+   "version": "1.0.0",
+   "description": "A web application for monitoring Ubuntu system information.",
+   "main": "./dist/app.js",
+   "scripts": {
+      "start": "ts-node src/index.ts",
+      "app": "node dist/app.js",
+      "build": "gulp"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/lochem2-718/monitor.weinberger.systems.git"
+   },
+   "author": "Jared Weinberger, Paul Gellai",
+   "license": "ISC",
+   "bugs": {
+      "url": "https://github.com/lochem2-718/monitor.weinberger.systems/issues"
+   },
+   "homepage": "https://github.com/lochem2-718/monitor.weinberger.systems#readme",
+   "devDependencies": {
+      "@types/argon2": "^0.15.0",
+      "@types/cookie-parser": "^1.4.1",
+      "@types/express": "^4.16.1",
+      "@types/express-jwt": "^0.0.42",
+      "@types/express-session": "^1.15.12",
+      "@types/helmet": "0.0.43",
+      "@types/systeminformation": "^3.23.1",
+      "elm": "^0.19.0",
+      "gulp": "^4.0.0",
+      "gulp-clean-css": "^4.0.0",
+      "gulp-elm": "^0.8.2",
+      "gulp-sass": "^4.0.2",
+      "gulp-terser": "^1.1.7",
+      "gulp-typescript": "^5.0.0",
+      "node-sass": "^4.12.0",
+      "nodemon": "^1.18.10",
+      "typescript": "3.3.3333",
+      "ts-node": "3.3.0",
+      "@types/node": "^8.0.29"
+   },
+   "dependencies": {
+      "@types/logger": "^0.0.0",
+      "@types/node": "^12.6.9",
+      "@types/pg": "^7.4.14",
+      "argon2": "^0.24.0",
+      "cookie-parser": "^1.4.4",
+      "express": "^4.16.4",
+      "express-jwt": "^5.3.1",
+      "express-session": "^1.16.1",
+      "file-system": "^2.2.2",
+      "helmet": "^3.18.0",
+      "logger": "^0.0.1",
+      "node-gyp-build": "^4.1.0",
+      "pg": "^7.12.0",
+      "reflect-metadata": "^0.1.10",
+      "systeminformation": "^4.4.1",
+      "ts": "^0.2.2",
+      "typeorm": "0.2.18",
+      "util": "^0.11.1",
+      "mysql": "^2.14.1"
+   }
 }
